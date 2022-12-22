@@ -133,6 +133,9 @@ SemanticVersion >> printOn: stream [
 
 	stream 
 		<< major asString 
-		<< '.' << minor asString 
-		<< '.' << patch asString
+		<< '.' << minor asString.
+
+	minor isWildcard ifTrue: [ ^ self ].
+
+	stream << '.' << patch asString
 ]
