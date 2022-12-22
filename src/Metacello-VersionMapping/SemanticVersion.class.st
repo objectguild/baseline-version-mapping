@@ -108,9 +108,9 @@ SemanticVersion >> initializeMajor: majorVersion minor: minorVersion patch: patc
 
 	self initialize.
 
-	major := majorVersion.
-	minor := minorVersion.
-	patch := patchVersion
+	major := self parseValue: majorVersion.
+	minor := self parseValue: minorVersion.
+	patch := self parseValue: patchVersion
 ]
 
 { #category : #accessing }
@@ -121,6 +121,14 @@ SemanticVersion >> major [
 { #category : #accessing }
 SemanticVersion >> minor [
 	^ minor
+]
+
+{ #category : #parsing }
+SemanticVersion >> parseValue: anObject [ 
+
+	({ '*'. $*. nil } includes: anObject) ifTrue: [ ^ '*' ].
+
+	^ anObject asInteger
 ]
 
 { #category : #accessing }
