@@ -107,12 +107,16 @@ VersionMappingBaselineOf >> repositoryForBaseline: aString [
 
 	"Answer the mapped respository url for my version and the specified baseline."
 
-	| map |
+	| map repository |
 
 	map := self versionBaselineRepositoryMap.
 
-	^ map at: self version at: aString ifAbsent: [ 
-		map at: '*' at: aString ]
+	repository := map at: self version at: aString ifAbsent: [ 
+		map at: '*' at: aString ].
+
+	MetacelloNotification signal: 'Mapping -> version: ' , self version , ' --- baseline: ' , aString , ' >> repository: ' , repository .
+
+	^ repository
 ]
 
 { #category : #accessing }
