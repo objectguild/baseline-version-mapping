@@ -40,23 +40,43 @@ Class {
 }
 
 { #category : #accessing }
-VersionMappingBaselineOf >> availableVersions [ 
+VersionMappingBaselineOf class >> availableVersions [ 
 
 	"Answer available version descriptions of my Iceberg repository. This will be 
-	a collection of names of branches and tag."
+	a collection of branches and tag names."
 
-	| myPackageName myRepository branchShortnames tagNames |
+	| myRepository branchShortnames tagNames |
 
-	myPackageName := self class package name.
-	myRepository := IceRepository repositories detect: [ :repository | 
-			repository workingCopy packages anySatisfy: [ :package | 
-				package name = myPackageName ] ].
+	myRepository := self myRepository.
 
 	branchShortnames := myRepository remoteTrackedBranches 
 		collect: [ :each | each shortname ] thenReject: [ :each | each = #HEAD ].
 	tagNames := myRepository tags collect: [ :each | each name ].
 
 	^ branchShortnames , tagNames
+]
+
+{ #category : #accessing }
+VersionMappingBaselineOf class >> detectVersion [ 
+
+	"Answer the version description of my Iceberg repository. This will be 
+	the name of the checked out branch or tag. 
+
+	This can probably also be a commit hash, but this has not been tested."
+
+	^ self myRepository head description
+]
+
+{ #category : #accessing }
+VersionMappingBaselineOf class >> myRepository [ 
+
+	| myPackageName |
+
+	myPackageName := self package name.
+
+	^ IceRepository repositories detect: [ :repository | 
+			repository workingCopy packages anySatisfy: [ :package | 
+				package name = myPackageName ] ]
 ]
 
 { #category : #accessing }
@@ -85,24 +105,6 @@ VersionMappingBaselineOf >> createVersionBaselineRepositoryMap [
 ]
 
 { #category : #accessing }
-VersionMappingBaselineOf >> detectVersion [ 
-
-	"Answer the version description of my Iceberg repository. This will be 
-	the name of the checked out branch or tag. 
-
-	This can probably also be a commit hash, but this was not tested."
-
-	| myPackageName myRepository |
-
-	myPackageName := self class package name.
-	myRepository := IceRepository repositories detect: [ :repository | 
-			repository workingCopy packages anySatisfy: [ :package | 
-				package name = myPackageName ] ].
-
-	^ myRepository head description
-]
-
-{ #category : #accessing }
 VersionMappingBaselineOf >> repositoryForBaseline: aString [ 
 
 	"Answer the mapped respository url for my version and the specified baseline."
@@ -122,7 +124,7 @@ VersionMappingBaselineOf >> repositoryForBaseline: aString [
 { #category : #accessing }
 VersionMappingBaselineOf >> version [ 
 
-	^ version ifNil: [ version := self detectVersion ]
+	^ version ifNil: [ version := self class detectVersion ]
 ]
 
 { #category : #accessing }
