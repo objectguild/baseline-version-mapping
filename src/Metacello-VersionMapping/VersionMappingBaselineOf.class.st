@@ -40,6 +40,26 @@ Class {
 }
 
 { #category : #accessing }
+VersionMappingBaselineOf >> availableVersions [ 
+
+	"Answer available version descriptions of my Iceberg repository. This will be 
+	a collection of names of branches and tag."
+
+	| myPackageName myRepository branchShortnames tagNames |
+
+	myPackageName := self class package name.
+	myRepository := IceRepository repositories detect: [ :repository | 
+			repository workingCopy packages anySatisfy: [ :package | 
+				package name = myPackageName ] ].
+
+	branchShortnames := myRepository remoteTrackedBranches 
+		collect: [ :each | each shortname ] thenReject: [ :each | each = #HEAD ].
+	tagNames := myRepository tags collect: [ :each | each name ].
+
+	^ branchShortnames , tagNames
+]
+
+{ #category : #accessing }
 VersionMappingBaselineOf >> createVersionBaselineRepositoryMap [ 
 
 	"Answer a dictionary (map) that can be used to determine which 
