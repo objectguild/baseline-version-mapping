@@ -1,7 +1,7 @@
 "
 I represent a semantic version. See [https://semver.org/](https://semver.org) for details.
 
-
+You can use '*', $* or nil as wildcard instead of an integer for my minor and patch values. Wildcards will match any number in a comparison with another semantic version object.
 "
 Class {
 	#name : #SemanticVersion,
