@@ -74,7 +74,7 @@ VersionMappingBaselineOf class >> myRepository [
 
 	myPackageName := self package name.
 
-	^ IceRepository repositories detect: [ :repository | 
+	^ IceRepository registry detect: [ :repository | 
 			repository workingCopy packages anySatisfy: [ :package | 
 				package name = myPackageName ] ]
 ]
